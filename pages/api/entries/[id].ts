@@ -43,9 +43,15 @@ const updateEntry = async( req: NextApiRequest, res: NextApiResponse<Data> ) => 
         status = entryToUpdate.status
     } = req.body;
 
-    const updateEntry = await Entry.findByIdAndUpdate( id, { description, status }, { runValidators: true, new: true } );
-
-    res.status(201).json( updateEntry! );
+    try {
+        const updateEntry = await Entry.findByIdAndUpdate( id, { description, status }, { runValidators: true, new: true } );
+        await db.disconnect();
+        res.status(200).json( updateEntry! );
+    } catch (error: any) {
+        console.log(error);
+        await db.disconnect();
+        res.status(400).json({ message: error.errors.status.message });
+    }
 
 }
 
