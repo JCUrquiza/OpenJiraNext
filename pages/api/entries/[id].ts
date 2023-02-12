@@ -12,15 +12,18 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
     const { id } = req.query;
 
     if ( !mongoose.isValidObjectId(id) ) {
-        return res.status(400).json({ message: 'El id no es válido' + id });
+        return res.status(400).json({ message: 'El id no es válido: ' + id });
     }
     
     switch (req.method) {
         case 'PUT':
-            return updateEntry( req, res );            
+            return updateEntry( req, res );
+        
+        case 'GET':
+            return getEntry( req, res);
             
         default:
-            return res.status(400).json({ message: 'El id no es válido' + id });
+            return res.status(400).json({ message: 'El id no es válido: ' + id });
     }
 
 }
@@ -52,6 +55,22 @@ const updateEntry = async( req: NextApiRequest, res: NextApiResponse<Data> ) => 
         await db.disconnect();
         res.status(400).json({ message: error.errors.status.message });
     }
+
+}
+
+const getEntry = async( req: NextApiRequest, res: NextApiResponse<Data>) => {
+
+    const { id } = req.query;
+
+    await db.connect();
+    const entryDetails = await Entry.findById( id );
+    await db.disconnect();
+
+    if ( !entryDetails ) {
+        return res.status(400).json({ message: 'No existe entrada con ese ID' });
+    }
+
+    return res.status(200).json( entryDetails );
 
 }
 
