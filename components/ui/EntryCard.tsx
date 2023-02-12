@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { Card, CardActionArea, CardContent, Typography, CardActions } from '@mui/material';
 import { Entry } from '../../interfaces';
 import { UIContext } from '../../context/ui/UIContext';
+import { dateFunctions } from '../../utils';
 
 interface Props {
     entry: Entry;
@@ -42,7 +43,7 @@ export const EntryCard: FC<Props> = ({ entry }) => {
                     <Typography sx={{ whiteSpace: 'pre-line' }}>{ entry.description }</Typography>
                 </CardContent>
                 <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-                    <Typography variant='body2'>{ entry.createAt }</Typography>
+                    <Typography variant='body2'>{ dateFunctions.getFormatDistanceToNow(entry.createAt) }</Typography>
                 </CardActions>
             </CardActionArea>
         </Card>

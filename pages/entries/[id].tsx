@@ -7,6 +7,7 @@ import { dbEntries } from '../../database';
 import { Layout } from '../../components/layouts';
 import { Entry, EntryStatus } from '../../interfaces';
 import { EntriesContext } from '../../context/entries';
+import { dateFunctions } from 'open-jira/utils';
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
@@ -58,7 +59,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
                     <Card>
                         <CardHeader
                             title={`Entrada: ${inputValue}`}
-                            subheader={`Creada hace ... minutos`} />
+                            subheader={`Creada ${ dateFunctions.getFormatDistanceToNow( entry.createAt ) }`} />
 
                         <CardContent>
                             <TextField 
